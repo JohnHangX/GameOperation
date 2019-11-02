@@ -66,6 +66,13 @@ public class SocketManager {
         string str = Encoding.UTF8.GetString(serverBuffer);    //将接收到的byte数组转换成字符串
         serverCallBack("接收到了" + size + "字节");
         serverCallBack(str);
+        if (size == 0)
+        {
+            workingSorket.Shutdown(SocketShutdown.Both);
+            workingSorket.Close();
+            serverCallBack("连接已断开");
+            return;
+        }
         workingSorket.BeginReceive(serverBuffer, 0, serverBuffer.Length, SocketFlags.None, ServerReceive, workingSorket);   //尾递归
     }
     #endregion

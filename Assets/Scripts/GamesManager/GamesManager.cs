@@ -21,9 +21,10 @@ public class GamesManager : MonoBehaviour {
     void Start () {
         Application.runInBackground = true;
         exitGameHandler = new EventHandler(NextProgress);
-        string tempPath = @"E:\release\GamesOperateDemo_Data";
-        //DirectoryInfo di = new DirectoryInfo(Application.dataPath);
-        DirectoryInfo di = new DirectoryInfo(tempPath);
+        //string tempPath = @"E:\release\GamesOperateDemo_Data";
+        //DirectoryInfo di = new DirectoryInfo(tempPath);
+        DirectoryInfo di = new DirectoryInfo(Application.dataPath);
+        
         fileDir = di.Parent.FullName + "/Games/";
         DirectoryInfo diParent = new DirectoryInfo(fileDir);
         gamesDics = diParent.GetDirectories();
@@ -106,8 +107,8 @@ public class GamesManager : MonoBehaviour {
             if (curGame.HasExited == true) NextProgress();
             
             print("curGame: "+ curGame.ProcessName);
-            //curGame.WaitForExit();
-            //NextProgress();
+            curGame.WaitForExit();
+            NextProgress();
         }
         else
         {
