@@ -48,7 +48,6 @@ public class SocketManager {
         serverSocket.Listen(10);
         serverCallBack("服务器启动成功");
         serverSocket.BeginAccept(ServerAccept, serverSocket);
-
     }
     void ServerAccept(IAsyncResult ar)
     {

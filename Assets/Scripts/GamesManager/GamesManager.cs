@@ -20,7 +20,7 @@ public class GamesManager : MonoBehaviour {
     int curGameIndex = 0;
     void Start () {
         Application.runInBackground = true;
-        //exitGameHandler = new EventHandler(NextProgress);
+        exitGameHandler = new EventHandler(NextProgress);
         string tempPath = @"E:\release\GamesOperateDemo_Data";
         //DirectoryInfo di = new DirectoryInfo(Application.dataPath);
         DirectoryInfo di = new DirectoryInfo(tempPath);
@@ -34,6 +34,7 @@ public class GamesManager : MonoBehaviour {
         }
         //showText.text = fileDir;
         curGameIndex = 0;
+        ShowWindow(GetForegroundWindow(), SW_SHOWMINIMIZED);
         SelectGame();
     }
 	
@@ -58,6 +59,14 @@ public class GamesManager : MonoBehaviour {
 
     [DllImport("user32.dll")]
     public static extern void SwitchToThisWindow(IntPtr hWnd, bool fAltTab);
+    const int SW_SHOWMINIMIZED = 2; //{最小化, 激活}  
+    const int SW_SHOWMAXIMIZED = 3;//最大化  
+    const int SW_SHOWRESTORE = 1;//还原  
+    [DllImport("user32.dll")]
+    public static extern bool ShowWindow(IntPtr hwnd, int nCmdShow);
+
+    [DllImport("user32.dll")]
+    static extern IntPtr GetForegroundWindow();
 
     void SelectGame()
     {
@@ -91,12 +100,13 @@ public class GamesManager : MonoBehaviour {
             //IntPtr handle = temp[0].MainWindowHandle;
             //SwitchToThisWindow(handle, true); // 激活，显示在最前
             curGame = temp[0];
-            //curGame.WaitForExit();
             
+            curGame.EnableRaisingEvents = true;
             curGame.Exited += exitGameHandler;
             if (curGame.HasExited == true) NextProgress();
-            curGame.EnableRaisingEvents = true;
-            print(curGame.ProcessName);
+            
+            print("curGame: "+ curGame.ProcessName);
+            //curGame.WaitForExit();
             //NextProgress();
         }
         else
@@ -115,6 +125,7 @@ public class GamesManager : MonoBehaviour {
         if (curGameIndex >= gamesLen)
         {
             curGameIndex = 0;
+            return;
         }
         SelectGame();
     }
@@ -127,6 +138,7 @@ public class GamesManager : MonoBehaviour {
         if (curGameIndex >= gamesLen)
         {
             curGameIndex = 0;
+            return;
         }
         SelectGame();
     }
